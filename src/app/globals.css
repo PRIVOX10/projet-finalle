@@ -1,0 +1,502 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wax: #f2e9dc;
+  --color-wax-deep: #e8dac6;
+  --color-surface: #faf4ea;
+  --color-plum: #3a1e2c;
+  --color-plum-soft: #68504f;
+  --color-line: #ddcdb8;
+  --color-rose: #a83c61;
+  --color-rose-soft: #f9e3e8;
+  --color-flame: #efa24f;
+  --color-flame-soft: #fcebd6;
+  --color-sage: #4f6b55;
+  --color-sage-soft: #e3ece1;
+  --color-danger: #a8322d;
+  --color-danger-soft: #fae3e0;
+  --color-plum-hover: #54303f;
+  --color-flame-ink: #8a5210;
+  --color-on-rose: #ffffff;
+  --color-band: #3a1e2c;
+  --color-band-ink: #f2e9dc;
+  --color-chart: #b8476c;
+}
+
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-display: var(--font-title);
+}
+
+:root {
+  color-scheme: light;
+  --backdrop: rgb(58 30 44 / 0.4);
+}
+
+/* La pièce aux bougies : prune presque noire, jamais un gris neutre. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --backdrop: rgb(8 4 6 / 0.65);
+  --color-wax: #160e13;
+  --color-wax-deep: #281b22;
+  --color-surface: #1e141a;
+  --color-plum: #f7ebdd;
+  --color-plum-soft: #bfa9a9;
+  --color-line: #3a2a31;
+  --color-rose: #f08dab;
+  --color-rose-soft: #40202c;
+  --color-flame: #ffb45c;
+  --color-flame-soft: #3d2a16;
+  --color-sage: #a9c9ae;
+  --color-sage-soft: #1f2e24;
+  --color-danger: #f29a92;
+  --color-danger-soft: #3e1c1b;
+  --color-plum-hover: #fff7ec;
+  --color-flame-ink: #ffce8a;
+  --color-on-rose: #2a0f19;
+  --color-band: #2a1a20;
+  --color-band-ink: #f7ebdd;
+  --color-chart: #d9648a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-wax);
+  color: var(--color-plum);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 2px;
+}
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(1100px 640px at 72% -6%, rgb(255 150 70 / 0.09), transparent 70%) no-repeat,
+    var(--color-wax);
+}
+
+dialog::backdrop {
+  background: var(--backdrop);
+}
+
+/* Le changement de thème s'étend en cercle depuis le bouton (voir lib/theme.ts). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.875rem;
+    padding: 0.625rem 1.375rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-plum);
+    color: var(--color-wax);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-plum-hover);
+  }
+  .btn-outline {
+    border: 1px solid var(--color-plum);
+    color: var(--color-plum);
+  }
+  .btn-outline:hover:not(:disabled) {
+    background: var(--color-wax-deep);
+  }
+  .btn-whatsapp {
+    background: #128c5e;
+    color: #fff;
+  }
+  .btn-whatsapp:hover:not(:disabled) {
+    background: #0e7550;
+  }
+  .btn-danger {
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: var(--color-danger-soft);
+  }
+  .btn-sm {
+    min-height: 2.375rem;
+    padding: 0.375rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .field {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    /* 16px : évite le zoom automatique de Safari iOS sur les champs. */
+    font-size: 1rem;
+  }
+  .field:focus {
+    outline: 2px solid var(--color-rose);
+    outline-offset: 0;
+    border-color: transparent;
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .field-label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .field-error {
+    margin-top: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--color-danger);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.375rem;
+    padding: 0.25rem 0.875rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: 0.875rem;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+  .chip:hover {
+    border-color: var(--color-plum-soft);
+  }
+  .chip[aria-current="true"] {
+    border-color: var(--color-plum);
+    background: var(--color-plum);
+    color: var(--color-wax);
+  }
+
+  .card {
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: var(--color-surface);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.hero-glow {
+  background: radial-gradient(circle, #f3d6b4 0%, #f0e0cc 45%, transparent 70%);
+  animation: glow 5s ease-in-out infinite;
+}
+
+[data-theme="dark"] .hero-glow {
+  inset: -14%;
+  background: radial-gradient(closest-side, rgb(255 165 85 / 0.26), rgb(240 120 90 / 0.1) 55%, transparent);
+}
+
+/* ---------- Mode sombre : les bougies s'allument ---------- */
+
+:root {
+  /* Laisse l'obscurité s'installer avant la première flamme. */
+  --ignite-start: 0.4s;
+  --flame: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2040%2070%27%3E%3Cdefs%3E%3Cfilter%20id%3D%27b%27%20x%3D%27-50%25%27%20y%3D%27-50%25%27%20width%3D%27200%25%27%20height%3D%27200%25%27%3E%3CfeGaussianBlur%20stdDeviation%3D%272.2%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27s%27%20x%3D%27-30%25%27%20y%3D%27-30%25%27%20width%3D%27160%25%27%20height%3D%27160%25%27%3E%3CfeGaussianBlur%20stdDeviation%3D%27.7%27%2F%3E%3C%2Ffilter%3E%3ClinearGradient%20id%3D%27o%27%20x1%3D%270%27%20y1%3D%271%27%20x2%3D%270%27%20y2%3D%270%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff9c33%27%2F%3E%3Cstop%20offset%3D%27.55%27%20stop-color%3D%27%23ffb547%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a1a%27%20stop-opacity%3D%27.55%27%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%27c%27%20cx%3D%27.5%27%20cy%3D%27.7%27%20r%3D%27.55%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ffffff%27%2F%3E%3Cstop%20offset%3D%27.45%27%20stop-color%3D%27%23fff4c9%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ffd36b%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%27u%27%20cx%3D%27.5%27%20cy%3D%27.5%27%20r%3D%27.5%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%236f8cff%27%20stop-opacity%3D%27.85%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%236f8cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%27M20%203c3%2014%2015%2024%2015%2039a15%2016%200%200%201-30%200C5%2027%2017%2017%2020%203Z%27%20fill%3D%27%23ff9a3c%27%20opacity%3D%27.55%27%20filter%3D%27url(%23b)%27%2F%3E%3Cpath%20d%3D%27M20%208c2.6%2012%2012%2021%2012%2034a12%2013%200%200%201-24%200C8%2029%2017.4%2020%2020%208Z%27%20fill%3D%27url(%23o)%27%20filter%3D%27url(%23s)%27%2F%3E%3Cpath%20d%3D%27M20%2024c1.6%208%207%2012%207%2020a7%207.5%200%200%201-14%200c0-8%205.4-12%207-20Z%27%20fill%3D%27url(%23c)%27%20filter%3D%27url(%23s)%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2754%27%20rx%3D%274.5%27%20ry%3D%273.2%27%20fill%3D%27url(%23u)%27%2F%3E%3C%2Fsvg%3E");
+}
+
+.candle-scene img {
+  transition: filter 0.7s ease;
+}
+
+[data-theme="dark"] .candle-scene img {
+  filter: brightness(0.74) saturate(1.12) contrast(1.04);
+}
+
+[data-theme="dark"] .group:hover .candle-scene img {
+  filter: brightness(0.86) saturate(1.12) contrast(1.04);
+}
+
+/* Les bords plongent dans l'ombre : le bouquet sort de la pénombre. */
+.candle-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 72% 66% at 50% 46%,
+    transparent 48%,
+    rgb(16 9 13 / 0.22) 76%,
+    rgb(16 9 13 / 0.55) 100%
+  );
+  animation: glow-in 1.2s ease both;
+}
+
+.candle-light {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .candle-light {
+  display: block;
+}
+
+.candle-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 62% 52% at 50% 42%,
+    rgb(255 168 82 / 0.24),
+    rgb(255 130 55 / 0.08) 60%,
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+  animation:
+    glow-in 1.4s ease var(--ignite-start) both,
+    breathe 3.4s ease-in-out calc(var(--ignite-start) + 1.4s) infinite alternate;
+}
+
+.candle {
+  position: absolute;
+  aspect-ratio: 4 / 7;
+  transform: translate(-50%, -90%);
+}
+
+.candle-lit {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: ignite 0.7s cubic-bezier(0.2, 1.5, 0.4, 1) calc(var(--ignite-start) + var(--order) * 90ms) both;
+}
+
+.candle-flame {
+  position: absolute;
+  inset: 0;
+  background: var(--flame) center bottom / contain no-repeat;
+  transform-origin: 50% 82%;
+  animation: flicker var(--flicker) ease-in-out calc(var(--order) * -0.23s) infinite alternate;
+}
+
+/* Halo dans l'air autour de la flamme. */
+.candle-halo {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 620%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgb(255 196 120 / 0.34), rgb(255 150 65 / 0.1) 45%, transparent);
+  mix-blend-mode: screen;
+  animation: waver calc(var(--flicker) * 1.9) ease-in-out calc(var(--order) * -0.31s) infinite;
+}
+
+/* La cire s'illumine juste sous la mèche, comme une vraie bougie allumée. */
+.candle-pool {
+  position: absolute;
+  left: 50%;
+  top: 92%;
+  width: 420%;
+  aspect-ratio: 1.6;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgb(255 205 140 / 0.5), rgb(255 160 80 / 0.16) 55%, transparent);
+  mix-blend-mode: screen;
+  animation: waver calc(var(--flicker) * 2.3) ease-in-out calc(var(--order) * -0.47s) infinite;
+}
+
+.ember {
+  position: absolute;
+  bottom: 42%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffc477;
+  box-shadow: 0 0 6px 1px rgb(255 160 70 / 0.8);
+  opacity: 0;
+  animation: rise 6s ease-out infinite;
+}
+
+[data-theme="dark"] .ignite-text {
+  color: var(--color-flame);
+  text-shadow: 0 0 34px rgb(255 165 80 / 0.5);
+  animation: text-ignite 1.3s ease var(--ignite-start) both;
+}
+
+.band {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .band {
+  background-image: radial-gradient(70% 130% at 88% 110%, rgb(255 150 70 / 0.2), transparent 70%);
+}
+
+.toggle-flame {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: scale(0.3);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+
+[data-theme="dark"] .toggle-flame {
+  fill: var(--color-flame);
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 4px var(--color-flame));
+}
+
+[data-theme="dark"] .logo-flame {
+  filter: drop-shadow(0 0 7px rgb(255 170 80 / 0.7));
+}
+
+@keyframes ignite {
+  0% {
+    opacity: 0;
+    transform: scale(0.1, 0.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1, 1) skewX(-1deg);
+  }
+  18% {
+    transform: scale(0.95, 1.07) skewX(1.5deg);
+  }
+  37% {
+    transform: scale(1.03, 0.96) skewX(-0.5deg);
+  }
+  52% {
+    transform: scale(0.97, 1.1) skewX(2deg);
+  }
+  71% {
+    transform: scale(1.02, 0.94) skewX(-1.8deg);
+  }
+  88% {
+    transform: scale(0.98, 1.04) skewX(0.6deg);
+  }
+  100% {
+    transform: scale(1, 1.02) skewX(-1deg);
+  }
+}
+
+@keyframes waver {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  23% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.78;
+  }
+  64% {
+    opacity: 0.96;
+  }
+  82% {
+    opacity: 0.82;
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.78;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(1);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(18px, -240px) scale(0.3);
+  }
+}
+
+@keyframes text-ignite {
+  0% {
+    color: var(--color-plum);
+    text-shadow: none;
+  }
+  45% {
+    color: #ffd9a0;
+    text-shadow: 0 0 46px rgb(255 175 90 / 0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-glow,
+  .candle-glow,
+  .candle-lit,
+  .candle-flame,
+  .candle-halo,
+  .candle-pool,
+  .candle-vignette,
+  .ignite-text {
+    animation: none !important;
+  }
+  .ember {
+    display: none;
+  }
+}

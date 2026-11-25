@@ -1,0 +1,19 @@
+# Déploiement Render : New > Blueprint, puis choisir ce dépôt.
+services:
+  - type: web
+    name: kandili
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      # Chaîne de connexion MongoDB Atlas, à saisir dans le tableau de bord Render.
+      - key: MONGODB_URI
+        sync: false
+      # Clé de signature des sessions de la gérante, générée par Render.
+      - key: SESSION_SECRET
+        generateValue: true
